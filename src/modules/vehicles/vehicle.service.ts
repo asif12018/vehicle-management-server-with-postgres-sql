@@ -52,18 +52,19 @@ const updateVehicle = async(payload: Record<string, unknown>,id:string)=>{
         return result;
 }
 
-//delete a user
+//delete a vehicles
 
-// const deleteUser = async(id: string)=>{
-//     const result = await pool.query(`
-//         DELETE FROM users WHERE id = $1
-//         `,[id]);
-//     return result
-// }
+const deleteVehicle = async(id: string)=>{
+    const result = await pool.query(`
+        DELETE FROM vehicles WHERE id = $1
+        `,[id]);
+    return result
+}
 
 export const vehicleService = {
     registerVehicle,
     getAllVehicles,
     getSingleVehicles,
-    updateVehicle
+    updateVehicle,
+    deleteVehicle
 }

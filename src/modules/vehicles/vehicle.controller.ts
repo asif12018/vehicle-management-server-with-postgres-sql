@@ -100,9 +100,39 @@ const updateVehicle = async(req: Request, res: Response)=>{
   }
 }
 
+//delete vehicles
+
+const deleteVehicle = async(req: Request, res:Response)=>{
+  try{
+
+    const result = await vehicleService.deleteVehicle(req.params.vehicleId as string);
+    console.log(result.rowCount);
+    if(result.rowCount === 0){
+      res.status(404).json({
+        success: false,
+        message: 'vehicle not not found'
+      })
+    }
+
+    res.status(200).json({
+      success: false,
+      message: 'vehicle deleted successfully',
+      data: null
+    })
+
+  }catch(err:any){
+    res.status(500).json({
+      success: false,
+      message: err.message,
+      details: err
+    })
+  }
+}
+
 export const vehicleController = {
   registerVehicles,
   getVehicles,
   getSingleVehicles,
-  updateVehicle
+  updateVehicle,
+  deleteVehicle
 };

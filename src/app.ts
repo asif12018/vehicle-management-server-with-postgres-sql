@@ -54,6 +54,10 @@ app.use("/api/v1", vehicleRoutes);
 
 app.use("/api/v1", vehicleRoutes);
 
+//delete vehicle
+
+app.use("/api/v1", vehicleRoutes);
+
 
 //not found routes
 app.use((req: Request, res: Response) => {
