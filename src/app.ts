@@ -23,8 +23,12 @@ app.use("/api/v1", authRoutes);
 
 //get all user
 
-app.use("/api/v1", userRoutes)
+app.use("/api/v1", userRoutes);
 
 //get single user
 
-app.use("/api/v1", userRoutes)
+app.use("/api/v1", userRoutes);
+
+//update user
+
+app.use("/api/v1", userRoutes);

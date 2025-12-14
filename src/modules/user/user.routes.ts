@@ -11,7 +11,8 @@ const router = express.Router();
 
 router.get("/users", userController.getAllUsers);
 
-router.get("/users/:id",userController.getSingleUser);
+router.get("/users/:userId",userController.getSingleUser);
 
+router.put("/users/:userId", userController.updateUser);
 
 export const userRoutes = router;
