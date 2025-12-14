@@ -42,6 +42,10 @@ app.use("/api/v1", userRoutes);
 
 app.use("/api/v1", vehicleRoutes);
 
+//get all vehicles
+
+app.use("/api/v1", vehicleRoutes);
+
 
 
 

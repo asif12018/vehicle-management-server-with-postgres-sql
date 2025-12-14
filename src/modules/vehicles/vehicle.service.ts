@@ -19,15 +19,15 @@ const registerVehicle = async (payload: Record<string, unknown>) => {
   return result;
 };
 
-//get all user
-// const getAllUsers = async () => {
-//   const result = await pool.query(`
-//     SELECT * FROM users
-//         `);
-//     return result;
-// };
+// get all vehicles
+const getAllVehicles = async () => {
+  const result = await pool.query(`
+    SELECT * FROM vehicles
+        `);
+    return result;
+};
 
-//get user by id
+// get user by id
 // const getSingleUser = async(id:string)=>{
 //     const result = await pool.query(`
 //         SELECT * FROM users Where id = $1
@@ -62,5 +62,6 @@ const registerVehicle = async (payload: Record<string, unknown>) => {
 // }
 
 export const vehicleService = {
-    registerVehicle
+    registerVehicle,
+    getAllVehicles
 }
