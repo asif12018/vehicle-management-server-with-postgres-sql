@@ -50,6 +50,9 @@ app.use("/api/v1", vehicleRoutes);
 
 app.use("/api/v1", vehicleRoutes);
 
+// update vehicle
+
+app.use("/api/v1", vehicleRoutes);
 
 
 //not found routes

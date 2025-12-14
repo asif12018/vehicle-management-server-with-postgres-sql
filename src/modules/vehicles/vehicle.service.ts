@@ -35,22 +35,22 @@ const getSingleVehicles = async(id:string)=>{
     return result;
 }
 
-// update a user
+// update a vehicle
 
-// const updateUser = async(payload: Record<string, unknown>,id:string)=>{
-//     const {name, email, phone, role} = payload;
-//     const result = await pool.query(`
-//         UPDATE users SET
-//         name = COALESCE($1, name),
-//         email = COALESCE($2, email),
-//         phone = COALESCE($3, phone),
-//         role = COALESCE($4, role),
-//         updated_at = NOW()
-//         WHERE id =$5
-//         RETURNING *
-//         `,[name, email, phone, role, id]);
-//         return result;
-// }
+const updateVehicle = async(payload: Record<string, unknown>,id:string)=>{
+    const {vehicle_name, type, registration_number, daily_rent_price} = payload;
+    const result = await pool.query(`
+        UPDATE vehicles SET
+        vehicle_name = COALESCE($1, vehicle_name),
+        type = COALESCE($2, type),
+        registration_number = COALESCE($3, registration_number),
+        daily_rent_price = COALESCE($4, daily_rent_price),
+        updated_at = NOW()
+        WHERE id =$5
+        RETURNING *
+        `,[vehicle_name, type, registration_number, daily_rent_price, id]);
+        return result;
+}
 
 //delete a user
 
@@ -64,5 +64,6 @@ const getSingleVehicles = async(id:string)=>{
 export const vehicleService = {
     registerVehicle,
     getAllVehicles,
-    getSingleVehicles
+    getSingleVehicles,
+    updateVehicle
 }
