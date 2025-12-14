@@ -1,8 +1,9 @@
 
-import express from "express";
+import express, { Request, Response } from "express";
 import initDB from "./config/db";
 import { authRoutes } from './modules/auth/auth.routes';
 import { userRoutes } from "./modules/user/user.routes";
+import { vehicleRoutes } from "./modules/vehicles/vehicle.route";
 
 export  const app = express();
 
@@ -36,3 +37,20 @@ app.use("/api/v1", userRoutes);
 //delete user
 
 app.use("/api/v1", userRoutes);
+
+//register a vehicle
+
+app.use("/api/v1", vehicleRoutes);
+
+
+
+
+
+//not found routes
+app.use((req: Request, res: Response) => {
+  res.status(404).json({
+    success: false,
+    message: "route not found",
+    path: req.path,
+  });
+});
