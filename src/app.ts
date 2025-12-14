@@ -32,3 +32,7 @@ app.use("/api/v1", userRoutes);
 //update user
 
 app.use("/api/v1", userRoutes);
+
+//delete user
+
+app.use("/api/v1", userRoutes);
