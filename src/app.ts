@@ -2,6 +2,7 @@
 import express from "express";
 import initDB from "./config/db";
 import { authRoutes } from './modules/auth/auth.routes';
+import { userRoutes } from "./modules/user/user.routes";
 
 export  const app = express();
 
@@ -17,4 +18,13 @@ initDB();
 
 //register a user
 
-app.use("/api/v1", authRoutes)
+app.use("/api/v1", authRoutes);
+
+
+//get all user
+
+app.use("/api/v1", userRoutes)
+
+//get single user
+
+app.use("/api/v1", userRoutes)
