@@ -46,7 +46,9 @@ app.use("/api/v1", vehicleRoutes);
 
 app.use("/api/v1", vehicleRoutes);
 
+//get single vehicles
 
+app.use("/api/v1", vehicleRoutes);
 
 
 

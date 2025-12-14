@@ -27,13 +27,13 @@ const getAllVehicles = async () => {
     return result;
 };
 
-// get user by id
-// const getSingleUser = async(id:string)=>{
-//     const result = await pool.query(`
-//         SELECT * FROM users Where id = $1
-//         `,[id]);
-//     return result;
-// }
+// get vehicle by id
+const getSingleVehicles = async(id:string)=>{
+    const result = await pool.query(`
+        SELECT * FROM vehicles Where id = $1
+        `,[id]);
+    return result;
+}
 
 // update a user
 
@@ -63,5 +63,6 @@ const getAllVehicles = async () => {
 
 export const vehicleService = {
     registerVehicle,
-    getAllVehicles
+    getAllVehicles,
+    getSingleVehicles
 }

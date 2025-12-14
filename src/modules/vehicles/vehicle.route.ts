@@ -12,6 +12,10 @@ router.post("/vehicles", vehicleController.registerVehicles);
 
 router.get("/vehicles", vehicleController.getVehicles);
 
+//get single vehicles
+
+router.get("/vehicles/:vehicleId", vehicleController.getSingleVehicles)
+
 
 
 export const vehicleRoutes = router;
