@@ -2,24 +2,63 @@ import { pool } from "../../config/db";
 import findRentPrice from "../../config/helperFunction";
 
 //create vehicles
+// const createBooking = async (payload: Record<string, unknown>) => {
+//   const { customer_id, vehicle_id, rent_start_date, rent_end_date } = payload;
+//   const result = await pool.query(
+//     `
+//       INSERT INTO bookings (customer_id, vehicle_id, rent_start_date, rent_end_date, total_price, status)
+//     SELECT 
+//       $1, 
+//       $2, 
+//       $3, 
+//       $4, 
+//       (v.daily_rent_price * (($4::date - $3::date) + 1)), 
+//       'active'
+//     FROM vehicles v 
+//     WHERE v.id = $2
+//     RETURNING *
+//     `,
+//     [customer_id, vehicle_id, rent_start_date, rent_end_date]
+//   );
+//   return result;
+// };
+
 const createBooking = async (payload: Record<string, unknown>) => {
   const { customer_id, vehicle_id, rent_start_date, rent_end_date } = payload;
+  const bookingStatus = 'active';
+
   const result = await pool.query(
     `
-      INSERT INTO bookings (customer_id, vehicle_id, rent_start_date, rent_end_date, total_price, status)
-    SELECT 
-      $1, 
-      $2, 
-      $3, 
-      $4, 
-      (v.daily_rent_price * (($4::date - $3::date) + 1)), 
-      'active'
-    FROM vehicles v 
-    WHERE v.id = $2
-    RETURNING *
+    WITH new_booking AS (
+      INSERT INTO bookings (
+        customer_id, 
+        vehicle_id, 
+        rent_start_date, 
+        rent_end_date, 
+        total_price, 
+        status
+      )
+      SELECT 
+        $1, 
+        $2, 
+        $3, 
+        $4, 
+        (v.daily_rent_price * (($4::date - $3::date) + 1)), 
+        $5
+      FROM vehicles v 
+      WHERE v.id = $2 AND v.availability_status = 'available'
+      RETURNING *
+    ),
+    update_vehicle AS (
+      UPDATE vehicles
+      SET availability_status = 'booked'
+      WHERE id = (SELECT vehicle_id FROM new_booking)
+    )
+    SELECT * FROM new_booking;
     `,
-    [customer_id, vehicle_id, rent_start_date, rent_end_date]
+    [customer_id, vehicle_id, rent_start_date, rent_end_date, bookingStatus]
   );
+
   return result;
 };
 

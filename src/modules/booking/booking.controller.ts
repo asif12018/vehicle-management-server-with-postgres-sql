@@ -13,7 +13,7 @@ const createBooking = async(req: Request, res: Response)=>{
         if(result.rows.length === 0){
             res.status(404).json({
                 success: false,
-                message: 'user or car not found'
+                message: 'the vehicles is not available or the user not found'
             })
         }
         res.status(201).json({
