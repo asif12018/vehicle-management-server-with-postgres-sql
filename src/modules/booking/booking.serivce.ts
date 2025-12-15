@@ -2,26 +2,6 @@ import { pool } from "../../config/db";
 import findRentPrice from "../../config/helperFunction";
 
 //create vehicles
-// const createBooking = async (payload: Record<string, unknown>) => {
-//   const { customer_id, vehicle_id, rent_start_date, rent_end_date } = payload;
-//   const result = await pool.query(
-//     `
-//       INSERT INTO bookings (customer_id, vehicle_id, rent_start_date, rent_end_date, total_price, status)
-//     SELECT 
-//       $1, 
-//       $2, 
-//       $3, 
-//       $4, 
-//       (v.daily_rent_price * (($4::date - $3::date) + 1)), 
-//       'active'
-//     FROM vehicles v 
-//     WHERE v.id = $2
-//     RETURNING *
-//     `,
-//     [customer_id, vehicle_id, rent_start_date, rent_end_date]
-//   );
-//   return result;
-// };
 
 const createBooking = async (payload: Record<string, unknown>) => {
   const { customer_id, vehicle_id, rent_start_date, rent_end_date } = payload;
@@ -54,7 +34,20 @@ const createBooking = async (payload: Record<string, unknown>) => {
       SET availability_status = 'booked'
       WHERE id = (SELECT vehicle_id FROM new_booking)
     )
-    SELECT * FROM new_booking;
+    SELECT 
+    nb.id,
+    nb.vehicle_id,
+    nb.rent_start_date,
+    nb.rent_end_date,
+    nb.total_price,
+    nb.status,
+    json_build_object(
+     'vehicle_name', v.vehicle_name,
+     'registration_number', v.registration_number,
+     'type',v.type
+    ) as vehicle
+     FROM new_booking nb
+     JOIN vehicles v ON nb.vehicle_id = v.id;
     `,
     [customer_id, vehicle_id, rent_start_date, rent_end_date, bookingStatus]
   );
