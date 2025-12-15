@@ -4,6 +4,7 @@ import initDB from "./config/db";
 import { authRoutes } from './modules/auth/auth.routes';
 import { userRoutes } from "./modules/user/user.routes";
 import { vehicleRoutes } from "./modules/vehicles/vehicle.route";
+import { bookingRoutes } from "./modules/booking/booking.route";
 
 export  const app = express();
 
@@ -57,6 +58,10 @@ app.use("/api/v1", vehicleRoutes);
 //delete vehicle
 
 app.use("/api/v1", vehicleRoutes);
+
+//create a booking
+
+app.use("/api/v1", bookingRoutes);
 
 
 //not found routes

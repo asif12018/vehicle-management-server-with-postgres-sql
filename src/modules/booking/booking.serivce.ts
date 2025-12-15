@@ -1,0 +1,70 @@
+import { pool } from "../../config/db";
+import findRentPrice from "../../config/helperFunction";
+
+//create vehicles
+const createBooking = async (payload: Record<string, unknown>) => {
+  const { customer_id, vehicle_id, rent_start_date, rent_end_date } = payload;
+  const result = await pool.query(
+    `
+      INSERT INTO bookings (customer_id, vehicle_id, rent_start_date, rent_end_date, total_price, status)
+    SELECT 
+      $1, 
+      $2, 
+      $3, 
+      $4, 
+      (v.daily_rent_price * (($4::date - $3::date) + 1)), 
+      'active'
+    FROM vehicles v 
+    WHERE v.id = $2
+    RETURNING *
+    `,
+    [customer_id, vehicle_id, rent_start_date, rent_end_date]
+  );
+  return result;
+};
+
+// get all vehicles
+// const getAllVehicles = async () => {
+//   const result = await pool.query(`
+//     SELECT * FROM vehicles
+//         `);
+//     return result;
+// };
+
+// get vehicle by id
+// const getSingleVehicles = async(id:string)=>{
+//     const result = await pool.query(`
+//         SELECT * FROM vehicles Where id = $1
+//         `,[id]);
+//     return result;
+// }
+
+// update a vehicle
+
+// const updateVehicle = async(payload: Record<string, unknown>,id:string)=>{
+//     const {vehicle_name, type, registration_number, daily_rent_price} = payload;
+//     const result = await pool.query(`
+//         UPDATE vehicles SET
+//         vehicle_name = COALESCE($1, vehicle_name),
+//         type = COALESCE($2, type),
+//         registration_number = COALESCE($3, registration_number),
+//         daily_rent_price = COALESCE($4, daily_rent_price),
+//         updated_at = NOW()
+//         WHERE id =$5
+//         RETURNING *
+//         `,[vehicle_name, type, registration_number, daily_rent_price, id]);
+//         return result;
+// }
+
+//delete a vehicles
+
+// const deleteVehicle = async(id: string)=>{
+//     const result = await pool.query(`
+//         DELETE FROM vehicles WHERE id = $1
+//         `,[id]);
+//     return result
+// }
+
+export const bookingService = {
+  createBooking,
+};
