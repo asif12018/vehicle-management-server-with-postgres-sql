@@ -1,7 +1,6 @@
 import { pool } from "../../config/db";
-import findRentPrice from "../../config/helperFunction";
 
-//create vehicles
+//create booking
 
 const createBooking = async (payload: Record<string, unknown>) => {
   const { customer_id, vehicle_id, rent_start_date, rent_end_date } = payload;
@@ -73,20 +72,20 @@ const createBooking = async (payload: Record<string, unknown>) => {
 
 // update a vehicle
 
-// const updateVehicle = async(payload: Record<string, unknown>,id:string)=>{
-//     const {vehicle_name, type, registration_number, daily_rent_price} = payload;
-//     const result = await pool.query(`
-//         UPDATE vehicles SET
-//         vehicle_name = COALESCE($1, vehicle_name),
-//         type = COALESCE($2, type),
-//         registration_number = COALESCE($3, registration_number),
-//         daily_rent_price = COALESCE($4, daily_rent_price),
-//         updated_at = NOW()
-//         WHERE id =$5
-//         RETURNING *
-//         `,[vehicle_name, type, registration_number, daily_rent_price, id]);
-//         return result;
-// }
+const updateBooking = async(payload: Record<string, unknown>,id:string)=>{
+    const {vehicle_name, type, registration_number, daily_rent_price} = payload;
+    const result = await pool.query(`
+        UPDATE bookings SET
+        vehicle_name = COALESCE($1, vehicle_name),
+        type = COALESCE($2, type),
+        registration_number = COALESCE($3, registration_number),
+        daily_rent_price = COALESCE($4, daily_rent_price),
+        updated_at = NOW()
+        WHERE id =$5
+        RETURNING *
+        `,[vehicle_name, type, registration_number, daily_rent_price, id]);
+        return result;
+}
 
 //delete a vehicles
 

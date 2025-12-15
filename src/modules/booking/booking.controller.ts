@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { bookingService } from "./booking.serivce";
+import { updateExpiredBookings } from "../../config/helperFunction";
 
 
 
@@ -9,6 +10,8 @@ import { bookingService } from "./booking.serivce";
 
 const createBooking = async(req: Request, res: Response)=>{
     try{
+        //checking the expired date of every booking
+            const updateExpiredBooking = await updateExpiredBookings();
         const result = await bookingService.createBooking(req.body);
         if(result.rows.length === 0){
             res.status(404).json({
