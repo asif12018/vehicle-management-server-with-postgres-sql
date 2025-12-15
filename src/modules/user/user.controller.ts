@@ -8,7 +8,7 @@ const getAllUsers = async (req: Request, res: Response) => {
     const result = await userService.getAllUsers();
     res.status(200).json({
       success: true,
-      message: "users retrieve successfully",
+      message: "Users retrieve successfully",
       data: result.rows,
     });
   } catch (err) {}
@@ -27,7 +27,7 @@ const getSingleUser = async (req: Request, res: Response) => {
     }
     res.status(200).json({
       success: true,
-      message: "user retrieve successfully",
+      message: "User retrieve successfully",
       data: result.rows,
     });
   } catch (err: any) {
@@ -55,7 +55,7 @@ const updateUser = async (req: Request, res: Response) => {
     }
     res.status(200).json({
       success: true,
-      message: "user updated successfully",
+      message: "User updated successfully",
       data: result.rows,
     });
   } catch (err: any) {
@@ -80,8 +80,7 @@ const deleteUser = async (req: Request, res: Response) => {
     }
     res.status(200).json({
       success: true,
-      message:'user deleted successfully',
-      data: null
+      message:'User deleted successfully'
     })
   } catch (err: any) {
     res.status(500).json({
