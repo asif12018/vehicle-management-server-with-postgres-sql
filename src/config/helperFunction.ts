@@ -1,5 +1,6 @@
 import { pool } from "./db";
-
+import jwt, { JwtPayload } from "jsonwebtoken";
+import config from './index';
 
 export const updateExpiredBookings = async () => {
   const result = await pool.query(`
@@ -31,4 +32,15 @@ export const checkIfBookingExists = async(id:string)=>{
     }
 
     return true
+}
+
+
+//get user id and role
+
+export const getUserEmailAndRole = async(token: string)=>{
+  const decode = jwt.verify(token as string, config.jwtSecret as string) as JwtPayload;
+  const user = await pool.query(`
+    SELECT * FROM users WHERE email = $1
+    `,[decode.email])
+  return {user};
 }

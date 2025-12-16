@@ -63,9 +63,14 @@ app.use("/api/v1", vehicleRoutes);
 
 app.use("/api/v1", bookingRoutes);
 
+//get all booking
+
+app.use("/api/v1", bookingRoutes);
+
 //login a user
 
 app.use("/api/v1", authRoutes);
+
 //not found routes
 app.use((req: Request, res: Response) => {
   res.status(404).json({

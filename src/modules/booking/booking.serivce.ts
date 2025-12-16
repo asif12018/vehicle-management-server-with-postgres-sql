@@ -42,8 +42,7 @@ const createBooking = async (payload: Record<string, unknown>) => {
     nb.status,
     json_build_object(
      'vehicle_name', v.vehicle_name,
-     'registration_number', v.registration_number,
-     'type',v.type
+     'daily_rent_price','v.daily_rent_price'
     ) as vehicle
      FROM new_booking nb
      JOIN vehicles v ON nb.vehicle_id = v.id;
@@ -55,12 +54,19 @@ const createBooking = async (payload: Record<string, unknown>) => {
 };
 
 // get all vehicles
-// const getAllVehicles = async () => {
-//   const result = await pool.query(`
-//     SELECT * FROM vehicles
-//         `);
-//     return result;
-// };
+const getAllBookings = async (payLoad: Record<string, unknown>) => {
+
+  //user check
+  if(payLoad.role === 'customer'){
+      const result = await pool.query(`
+        SELECT * FROM bookings WHERE customer_id = $1`,[payLoad.id])
+        return result
+  }
+  const result = await pool.query(`
+    SELECT * FROM bookings
+        `);
+    return result;
+};
 
 // get vehicle by id
 // const getSingleVehicles = async(id:string)=>{
@@ -72,20 +78,20 @@ const createBooking = async (payload: Record<string, unknown>) => {
 
 // update a vehicle
 
-const updateBooking = async(payload: Record<string, unknown>,id:string)=>{
-    const {vehicle_name, type, registration_number, daily_rent_price} = payload;
-    const result = await pool.query(`
-        UPDATE bookings SET
-        vehicle_name = COALESCE($1, vehicle_name),
-        type = COALESCE($2, type),
-        registration_number = COALESCE($3, registration_number),
-        daily_rent_price = COALESCE($4, daily_rent_price),
-        updated_at = NOW()
-        WHERE id =$5
-        RETURNING *
-        `,[vehicle_name, type, registration_number, daily_rent_price, id]);
-        return result;
-}
+// const updateBooking = async(payload: Record<string, unknown>,id:string)=>{
+//     const {vehicle_name, type, registration_number, daily_rent_price} = payload;
+//     const result = await pool.query(`
+//         UPDATE bookings SET
+//         vehicle_name = COALESCE($1, vehicle_name),
+//         type = COALESCE($2, type),
+//         registration_number = COALESCE($3, registration_number),
+//         daily_rent_price = COALESCE($4, daily_rent_price),
+//         updated_at = NOW()
+//         WHERE id =$5
+//         RETURNING *
+//         `,[vehicle_name, type, registration_number, daily_rent_price, id]);
+//         return result;
+// }
 
 //delete a vehicles
 
@@ -98,4 +104,5 @@ const updateBooking = async(payload: Record<string, unknown>,id:string)=>{
 
 export const bookingService = {
   createBooking,
+  getAllBookings
 };
