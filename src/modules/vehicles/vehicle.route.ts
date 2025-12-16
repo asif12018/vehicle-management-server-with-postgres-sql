@@ -1,5 +1,6 @@
 import express from "express";
 import { vehicleController } from "./vehicle.controller";
+import protectedRoute from "../../middleware/auth";
 
 const router = express.Router();
 
@@ -8,7 +9,7 @@ router.post("/vehicles", vehicleController.registerVehicles);
 
 //get all vehicles
 
-router.get("/vehicles", vehicleController.getVehicles);
+router.get("/vehicles", protectedRoute('admin', 'customer'),vehicleController.getVehicles);
 
 //get single vehicles
 

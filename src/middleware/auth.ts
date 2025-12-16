@@ -9,11 +9,10 @@ import jwt from 'jsonwebtoken';
 import { JwtPayload } from 'jsonwebtoken';
 //role based authentication
 
-const auth = (...roles: string[])=>{
+const protectedRoute = (...roles: string[])=>{
     return async(req: Request, res: Response, next: NextFunction)=>{
         try{
-
-        const token = req.headers.Authorization;
+        const token = req.headers.authorization;
         if(!token){
             res.status(401).json({
                 success: false,
@@ -26,7 +25,13 @@ const auth = (...roles: string[])=>{
         next();
 
         }catch(err: any){
-
+           res.status(500).json({
+            success:false,
+            message:err.message,
+            details:err
+           })
         }
     }
 }
+
+export default protectedRoute
