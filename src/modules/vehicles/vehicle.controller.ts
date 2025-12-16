@@ -10,7 +10,7 @@ const registerVehicles = async (req: Request, res: Response) => {
 
     res.status(201).json({
       success: true,
-      message: "vehicle created successfully",
+      message: "Vehicle created successfully",
       data: result.rows,
     });
   } catch (err: any) {
@@ -33,7 +33,6 @@ const getVehicles = async (req: Request, res: Response) => {
       res.status(404).json({
         success: false,
         message: "No vehicle found",
-        data: [],
       });
     }
     res.status(200).json({
@@ -63,12 +62,11 @@ const getSingleVehicles = async (req: Request, res: Response) => {
       res.status(404).json({
         success: false,
         message: "No vehicle found",
-        data: null,
       });
     }
     res.status(200).json({
       success: true,
-      message: "vehicle retrieved successfully",
+      message: "Vehicle retrieved successfully",
       data: result.rows,
     });
   } catch (err: any) {
