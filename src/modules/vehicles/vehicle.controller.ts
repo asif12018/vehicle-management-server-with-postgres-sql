@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { vehicleService } from "./vehicle.service";
-import { updateExpiredBookings } from "../../config/helperFunction";
+import { checkIfBookingExists, updateExpiredBookings } from "../../config/helperFunction";
 
 //register a vehicles
 
@@ -30,9 +30,9 @@ const getVehicles = async (req: Request, res: Response) => {
     const updateExpiredBooking = await updateExpiredBookings();
     const result = await vehicleService.getAllVehicles();
     if (result.rows.length === 0) {
-      res.status(404).json({
-        success: false,
-        message: "No vehicle found",
+      res.status(200).json({
+        success: true,
+        message: "No vehicles found",
       });
     }
     res.status(200).json({
@@ -92,8 +92,7 @@ const updateVehicle = async (req: Request, res: Response) => {
     if (result.rows.length === 0) {
       res.status(404).json({
         success: false,
-        message: "vehicles not found",
-        data: null,
+        message: "Vehicle not found",
       });
     }
 
@@ -117,6 +116,14 @@ const deleteVehicle = async (req: Request, res: Response) => {
   try {
     //checking the expired date of every booking
     const updateExpiredBooking = await updateExpiredBookings();
+    //checking is booking exist for the booking
+    const checkBooking = await checkIfBookingExists(req.params.vehicleId as string);
+    if(checkBooking === true){
+      return res.status(500).json({
+        success: false,
+        message:'delete failed due to active booking available for this vehicle'
+      })
+    }
     const result = await vehicleService.deleteVehicle(
       req.params.vehicleId as string
     );
@@ -130,7 +137,7 @@ const deleteVehicle = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: false,
-      message: "vehicle deleted successfully",
+      message: "Vehicle deleted successfully",
     });
   } catch (err: any) {
     res.status(500).json({

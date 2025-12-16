@@ -9,11 +9,11 @@ router.post("/vehicles", protectedRoute('admin'),vehicleController.registerVehic
 
 //get all vehicles
 
-router.get("/vehicles", protectedRoute('admin', 'customer'),vehicleController.getVehicles);
+router.get("/vehicles", vehicleController.getVehicles);
 
 //get single vehicles
 
-router.get("/vehicles/:vehicleId", protectedRoute('admin','customer'),vehicleController.getSingleVehicles);
+router.get("/vehicles/:vehicleId",vehicleController.getSingleVehicles);
 
 //update vehicles
 
@@ -21,6 +21,6 @@ router.put("/vehicles/:vehicleId", protectedRoute('admin'),vehicleController.upd
 
 //delete vehicles
 
-router.delete("/vehicles/:vehicleId", vehicleController.deleteVehicle);
+router.delete("/vehicles/:vehicleId", protectedRoute('admin'),vehicleController.deleteVehicle);
 
 export const vehicleRoutes = router;

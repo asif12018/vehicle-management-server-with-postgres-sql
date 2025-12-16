@@ -22,7 +22,7 @@ const createBooking = async (payload: Record<string, unknown>) => {
         $2, 
         $3, 
         $4, 
-        (v.daily_rent_price * (($4::date - $3::date) + 1)), 
+        (v.daily_rent_price * (($4::date - $3::date))), 
         $5
       FROM vehicles v 
       WHERE v.id = $2 AND v.availability_status = 'available'

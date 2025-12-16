@@ -17,3 +17,18 @@ export const updateExpiredBookings = async () => {
     SELECT * FROM expired_bookings;
   `);
 };
+
+
+//check if a booking exist
+
+export const checkIfBookingExists = async(id:string)=>{
+  const result = await pool.query(`
+    SELECT * FROM bookings WHERE vehicle_id = $1
+    `,[id]);
+
+    if(result.rows.length === 0){
+        return false
+    }
+
+    return true
+}
