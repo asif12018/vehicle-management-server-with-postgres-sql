@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { bookingService } from "./booking.serivce";
+import { bookingService } from "./booking.service";
 import {
   checkBookingDate,
   getUserEmailAndRole,
