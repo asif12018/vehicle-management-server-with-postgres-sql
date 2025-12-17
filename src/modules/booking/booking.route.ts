@@ -9,7 +9,9 @@ const router = express.Router();
 //create booking
 
 router.post("/bookings", protectedRoute('admin','customer'),bookingController.createBooking);
-router.get("/bookings", bookingController.getAllBookings);
+
+//get all bookings
+router.get("/bookings", protectedRoute('admin','customer'),bookingController.getAllBookings);
 
 
 
