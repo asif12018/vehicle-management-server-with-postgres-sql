@@ -13,6 +13,10 @@ router.post("/bookings", protectedRoute('admin','customer'),bookingController.cr
 //get all bookings
 router.get("/bookings", protectedRoute('admin','customer'),bookingController.getAllBookings);
 
+//update booking
+
+router.put("/bookings/:bookingId",protectedRoute('admin', 'customer'), bookingController.updateBooking);
+
 
 
 export const bookingRoutes = router;

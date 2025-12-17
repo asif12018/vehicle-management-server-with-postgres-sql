@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { bookingService } from "./booking.serivce";
-import {  getUserEmailAndRole, updateExpiredBookings } from "../../config/helperFunction";
+import {  checkBookingDate, getUserEmailAndRole, updateExpiredBookings } from "../../config/helperFunction";
 
 //create booking
 
@@ -56,7 +56,37 @@ const getAllBookings = async(req:Request, res:Response)=>{
   }
 }
 
+//update booking
+
+const updateBooking = async(req:Request, res:Response)=>{
+   try{
+     //check booking date
+    const bookingDate = await checkBookingDate(req.params.bookingId as string);
+    if(bookingDate === false){
+      return res.status(404).json({
+        success:false,
+        message: 'booking not exist'
+      })
+    }
+
+    if(bookingDate <= new Date()){
+      return res.status(400).json({
+        success:false,
+        message:'Cannot cancel, booking already started!'
+      })
+    }
+    console.log(bookingDate);
+   }catch(err:any){
+    res.status(500).json({
+      success:false,
+      message: err.message,
+      details: err
+    })
+   }
+}
+
 export const bookingController = {
   createBooking,
-  getAllBookings
+  getAllBookings,
+  updateBooking
 };

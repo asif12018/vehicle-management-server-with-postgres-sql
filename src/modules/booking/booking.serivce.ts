@@ -53,7 +53,7 @@ const createBooking = async (payload: Record<string, unknown>) => {
   return result;
 };
 
-// get all vehicles
+// get all bookings
 const getAllBookings = async (payLoad: Record<string, unknown>) => {
 
   //user check
@@ -113,22 +113,14 @@ const getAllBookings = async (payLoad: Record<string, unknown>) => {
 //     return result;
 // }
 
-// update a vehicle
+// update a booking
 
-// const updateBooking = async(payload: Record<string, unknown>,id:string)=>{
-//     const {vehicle_name, type, registration_number, daily_rent_price} = payload;
-//     const result = await pool.query(`
-//         UPDATE bookings SET
-//         vehicle_name = COALESCE($1, vehicle_name),
-//         type = COALESCE($2, type),
-//         registration_number = COALESCE($3, registration_number),
-//         daily_rent_price = COALESCE($4, daily_rent_price),
-//         updated_at = NOW()
-//         WHERE id =$5
-//         RETURNING *
-//         `,[vehicle_name, type, registration_number, daily_rent_price, id]);
-//         return result;
-// }
+const updateBooking = async(payLoad:Record<string, unknown>, bookingId: string)=>{
+    if(payLoad.role === 'customer'){
+      
+        
+    }
+}
 
 //delete a vehicles
 
