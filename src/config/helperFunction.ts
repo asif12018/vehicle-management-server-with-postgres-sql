@@ -49,7 +49,7 @@ export const getUserEmailAndRole = async(token: string)=>{
 
 //check booking date
 export const checkBookingDate = async (bookingId: string) => {
- 
+  
   const bookingData = await pool.query(
     `SELECT rent_start_date FROM bookings WHERE id = $1`,
     [bookingId]

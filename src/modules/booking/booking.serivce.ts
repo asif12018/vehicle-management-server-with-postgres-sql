@@ -115,10 +115,36 @@ const getAllBookings = async (payLoad: Record<string, unknown>) => {
 
 // update a booking
 
-const updateBooking = async(payLoad:Record<string, unknown>, bookingId: string)=>{
+const updateBooking = async(payLoad:Record<string, unknown>, bookingId: string, status: string)=>{
+  //for customer
     if(payLoad.role === 'customer'){
-      
+        const result = await pool.query(`
+          UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *
+          `,[status, bookingId]);
+
+          return result;
         
+    }
+
+    //for admin
+    if(payLoad.role === 'admin'){
+      const updateBookingResult = await pool.query(`
+         UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *
+        `,[status, bookingId]);
+
+        if (updateBookingResult.rows.length === 0){
+          return null;
+        }
+
+        if(status === 'returned'){
+          await pool.query(`
+            UPDATE vehicles
+            SET availability_status='available'
+            WHERE id=$1
+            `,[updateBookingResult.rows[0].vehicle_id]);
+        }
+
+        return updateBookingResult;
     }
 }
 
@@ -133,5 +159,6 @@ const updateBooking = async(payLoad:Record<string, unknown>, bookingId: string)=
 
 export const bookingService = {
   createBooking,
-  getAllBookings
+  getAllBookings,
+  updateBooking
 };
