@@ -75,6 +75,16 @@ app.use("/api/v1", bookingRoutes);
 app.use("/api/v1", authRoutes);
 
 
+//
+
+app.get("/",(req:Request, res:Response)=>{
+   res.status(200).json({
+    success:true,
+    message:'hello world'
+   })
+})
+
+
 
 //not found routes
 app.use((req: Request, res: Response) => {
