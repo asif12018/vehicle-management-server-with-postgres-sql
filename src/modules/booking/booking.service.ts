@@ -121,7 +121,14 @@ const updateBooking = async(payLoad:Record<string, unknown>, bookingId: string, 
   //for customer
     if(payLoad.role === 'customer'){
         const result = await pool.query(`
-          UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *
+          UPDATE bookings SET status=$1 WHERE id=$2 RETURNING 
+          id,
+          customer_id,
+          vehicle_id,
+          TO_CHAR(rent_start_date, 'YYY-MM-DD') AS rent_start_date,
+          TO_CHAR(rent_end_date, 'YYY-MM-DD') AS rent_end_date,
+          total_price::FLOAT,
+          status
           `,[status, bookingId]);
 
           return result;
@@ -131,7 +138,14 @@ const updateBooking = async(payLoad:Record<string, unknown>, bookingId: string, 
     //for admin
     if(payLoad.role === 'admin'){
       const updateBookingResult = await pool.query(`
-         UPDATE bookings SET status=$1 WHERE id=$2 RETURNING *
+         UPDATE bookings SET status=$1 WHERE id=$2 RETURNING 
+         id,
+          customer_id,
+          vehicle_id,
+          TO_CHAR(rent_start_date, 'YYY-MM-DD') AS rent_start_date,
+          TO_CHAR(rent_end_date, 'YYY-MM-DD') AS rent_end_date,
+          total_price::FLOAT,
+          status
         `,[status, bookingId]);
 
         if (updateBookingResult.rows.length === 0){
