@@ -50,7 +50,12 @@ const updateUser = async (req: Request, res: Response) => {
           req.headers.authorization as string
         );
 
-        console.log(userData.user.rows[0].role)
+        if(userData === null){
+          return res.status(403).json({
+            success:false,
+            message:'forbidden access'
+          })
+        }
 
       //filtering user update data role
       if(userData.user.rows[0].role === 'customer' && req.body?.role){
