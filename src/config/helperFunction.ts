@@ -62,3 +62,32 @@ export const checkBookingDate = async (bookingId: string) => {
 
   return new Date(bookingData.rows[0].rent_start_date);
 };
+
+//is user exist
+
+export const isUserExist = async (id:string)=>{
+  const result = await pool.query(`
+    SELECT * FROM users WHERE id=$1
+    `,[id]);
+
+    if(result.rows.length === 0){
+      return false
+    }
+
+    return true
+}
+
+
+//is vehicle exist
+
+export const isVehicleExist = async (id:string) =>{
+  const result = await pool.query(`
+    SELECT * FROM vehicles WHERE id=$1
+    `,[id]);
+
+    if(result.rows.length === 0){
+      return false
+    }
+
+    return true
+}

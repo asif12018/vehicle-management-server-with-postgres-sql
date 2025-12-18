@@ -4,19 +4,41 @@ import {
   checkBookingDate,
   getUserEmailAndRole,
   updateExpiredBookings,
+  isUserExist,
+  isVehicleExist
 } from "../../config/helperFunction";
 
 //create booking
 
 const createBooking = async (req: Request, res: Response) => {
   try {
+
+    const isUserExistData = await isUserExist(req.body.customer_id);
+    const isVehicleExistData = await isVehicleExist(req.body.vehicle_id);
+    //checking if the user is exist or not
+    if(isUserExistData === false){
+      return res.status(404).json({
+        success:false,
+        message:'User not exist!!'
+      })
+    }
+
+    //checking if the vehicle is exist or not
+
+    if(isVehicleExistData === false){
+      return res.status(404).json({
+        success:false,
+        message:'Vehicle not exists'
+      })
+    }
+
     //checking the expired date of every booking
     const updateExpiredBooking = await updateExpiredBookings();
     const result = await bookingService.createBooking(req.body);
     if (result.rows.length === 0) {
-      return res.status(404).json({
+      return res.status(400).json({
         success: false,
-        message: "the vehicles is not available or the user not found",
+        message: "The vehicle is already booked by another user",
       });
     }
     return res.status(201).json({
