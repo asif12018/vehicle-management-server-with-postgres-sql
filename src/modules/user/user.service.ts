@@ -3,7 +3,13 @@ import { pool } from "../../config/db";
 //get all user
 const getAllUsers = async () => {
   const result = await pool.query(`
-    SELECT * FROM users
+    SELECT
+      id,
+      name,
+      email,
+      phone,
+      role
+    FROM users
         `);
     return result;
 };
@@ -11,7 +17,13 @@ const getAllUsers = async () => {
 //get user by id
 const getSingleUser = async(id:string)=>{
     const result = await pool.query(`
-        SELECT * FROM users Where id = $1
+        SELECT
+      id,
+      name,
+      email,
+      phone,
+      role
+    FROM users WHERE id = $1
         `,[id]);
     return result;
 }
@@ -25,8 +37,7 @@ const updateUser = async(payload: Record<string, unknown>,id:string)=>{
         name = COALESCE($1, name),
         email = COALESCE($2, email),
         phone = COALESCE($3, phone),
-        role = COALESCE($4, role),
-        updated_at = NOW()
+        role = COALESCE($4, role)
         WHERE id =$5
         RETURNING *
         `,[name, email, phone, role, id]);

@@ -9,7 +9,7 @@ router.post("/vehicles", protectedRoute('admin'),vehicleController.registerVehic
 
 //get all vehicles
 
-router.get("/vehicles", vehicleController.getVehicles);
+router.get("/vehicles",vehicleController.getVehicles);
 
 //get single vehicles
 

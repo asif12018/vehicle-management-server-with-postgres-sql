@@ -8,10 +8,19 @@ const registerVehicles = async (req: Request, res: Response) => {
   try {
     const result = await vehicleService.registerVehicle(req.body);
 
+    //converting vehicle price into number
+    const {id, vehicle_name, type, registration_number, daily_rent_price, availability_status} = result.rows[0];
+
+    const vehicleRentPriceNumber = Number(daily_rent_price); 
+
+    const vehicleData = {
+      id, vehicle_name, type, registration_number, vehicleRentPriceNumber, availability_status
+    }
+
     res.status(201).json({
       success: true,
       message: "Vehicle created successfully",
-      data: result.rows,
+      data: vehicleData,
     });
   } catch (err: any) {
     res.status(500).json({
@@ -89,17 +98,28 @@ const updateVehicle = async (req: Request, res: Response) => {
       req.params.vehicleId as string
     );
 
+  
+
     if (result.rows.length === 0) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         message: "Vehicle not found",
       });
     }
 
-    res.status(200).json({
+    //converting vehicle price into number
+    const {id, vehicle_name, type, registration_number, daily_rent_price, availability_status} = result.rows[0];
+
+    const vehicleRentPriceNumber = Number(daily_rent_price); 
+
+    const vehicleData = {
+      id, vehicle_name, type, registration_number, vehicleRentPriceNumber, availability_status
+    }
+
+    return res.status(200).json({
       success: true,
-      message: "vehicle update successful",
-      data: result.rows,
+      message: "Vehicle update successful",
+      data: vehicleData,
     });
   } catch (err: any) {
     res.status(500).json({
