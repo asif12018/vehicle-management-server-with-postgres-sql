@@ -61,6 +61,12 @@ const getAllBookings = async (req: Request, res: Response) => {
     const userData = await getUserEmailAndRole(
       req.headers.authorization as string
     );
+    if(userData === null){
+      return res.status(404).json({
+        success:false,
+        message:'unauthorized'
+      })
+    }
     const result = await bookingService.getAllBookings(userData.user.rows[0]);
     if (result.rows.length === 0) {
       return res.status(200).json({
@@ -101,7 +107,12 @@ const updateBooking = async (req: Request, res: Response) => {
       req.headers.authorization as string
     );
     // console.log(userData.user.rows[0]);
-    console.log(req.body.status);
+    if(userData === null){
+      return res.status(403).json({
+        success:false,
+        message:'unauthorized'
+      })
+    }
     if (
       userData.user.rows[0].role === "customer" &&
       req.body.status !== "cancelled"

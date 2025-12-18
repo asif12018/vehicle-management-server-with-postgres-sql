@@ -38,6 +38,9 @@ export const checkIfBookingExists = async(id:string)=>{
 //get user id and role
 
 export const getUserEmailAndRole = async(token: string)=>{
+  if(!token){
+    return null
+  }
   const decode = jwt.verify(token as string, config.jwtSecret as string) as JwtPayload;
   const user = await pool.query(`
     SELECT * FROM users WHERE email = $1

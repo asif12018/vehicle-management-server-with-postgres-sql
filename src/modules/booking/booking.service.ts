@@ -8,24 +8,25 @@ const createBooking = async (payload: Record<string, unknown>) => {
 
   const result = await pool.query(
     `
-    WITH new_booking AS (
+   WITH new_booking AS (
       INSERT INTO bookings (
-        customer_id, 
-        vehicle_id, 
-        rent_start_date, 
-        rent_end_date, 
-        total_price, 
+        customer_id,
+        vehicle_id,
+        rent_start_date,
+        rent_end_date,
+        total_price,
         status
       )
-      SELECT 
-        $1, 
-        $2, 
-        $3, 
-        $4, 
-        (v.daily_rent_price * (($4::date - $3::date))), 
+      SELECT
+        $1,
+        $2,
+        $3,
+        $4,
+        (v.daily_rent_price * ($4::date - $3::date)),
         $5
-      FROM vehicles v 
-      WHERE v.id = $2 AND v.availability_status = 'available'
+      FROM vehicles v
+      WHERE v.id = $2
+        AND v.availability_status = 'available'
       RETURNING *
     ),
     update_vehicle AS (
@@ -33,19 +34,20 @@ const createBooking = async (payload: Record<string, unknown>) => {
       SET availability_status = 'booked'
       WHERE id = (SELECT vehicle_id FROM new_booking)
     )
-    SELECT 
-    nb.id,
-    nb.vehicle_id,
-    nb.rent_start_date,
-    nb.rent_end_date,
-    nb.total_price,
-    nb.status,
-    json_build_object(
-     'vehicle_name', v.vehicle_name,
-     'daily_rent_price','v.daily_rent_price'
-    ) as vehicle
-     FROM new_booking nb
-     JOIN vehicles v ON nb.vehicle_id = v.id;
+    SELECT
+      nb.id,
+      nb.customer_id,
+      nb.vehicle_id,
+      TO_CHAR(nb.rent_start_date, 'YYYY-MM-DD') AS rent_start_date,
+      TO_CHAR(nb.rent_end_date, 'YYYY-MM-DD') AS rent_end_date,
+      nb.total_price::FLOAT AS total_price,
+      nb.status,
+      json_build_object(
+        'vehicle_name', v.vehicle_name,
+        'daily_rent_price', v.daily_rent_price::FLOAT
+      ) AS vehicle
+    FROM new_booking nb
+    JOIN vehicles v ON nb.vehicle_id = v.id;
     `,
     [customer_id, vehicle_id, rent_start_date, rent_end_date, bookingStatus]
   );
@@ -63,12 +65,13 @@ const getAllBookings = async (payLoad: Record<string, unknown>) => {
         b.id,
         b.customer_id,
         b.vehicle_id,
-        b.rent_start_date,
-        b.rent_end_date,
-        b.total_price,
+        TO_CHAR(b.rent_start_date, 'YYYY-MM-DD') AS rent_start_date,
+        TO_CHAR(b.rent_end_date, 'YYY-MM-DD') AS rent_end_date,
+        b.total_price::FLOAT,
         b.status,
         json_build_object(
         'vehicle_name', v.vehicle_name,
+        'registration_number', v.registration_number,
         'type', v.type
         ) AS vehicle
         FROM bookings b
@@ -80,26 +83,25 @@ const getAllBookings = async (payLoad: Record<string, unknown>) => {
 
   // admin check
   const result = await pool.query(`
-    SELECT
+  SELECT
     b.id,
     b.customer_id,
     b.vehicle_id,
-    b.rent_start_date,
-    b.rent_end_date,
-    b.total_price,
+    TO_CHAR(b.rent_start_date, 'YYYY-MM-DD') AS rent_start_date,
+    TO_CHAR(b.rent_end_date, 'YYYY-MM-DD') AS rent_end_date,
+    b.total_price::FLOAT,
     b.status,
     json_build_object(
-    'name', u.name,
-    'email', u.email
-    ) As customer,
-     json_build_object(
-     'vehicle_name', v.vehicle_name,
-     'registration_number', v.registration_number
-     'type', 'v.type'
-     ) As vehicle
-     FROM bookings b
-     JOIN users u ON b.customer_id = u.id
-     JOIN vehicles v ON b.vehicle_id = v.id
+      'name', u.name,
+      'email', u.email
+    ) AS customer,
+    json_build_object(
+      'vehicle_name', v.vehicle_name,
+      'registration_number', v.registration_number
+    ) AS vehicle
+  FROM bookings b
+  JOIN users u ON b.customer_id = u.id
+  JOIN vehicles v ON b.vehicle_id = v.id
         `);
     
     return result;
