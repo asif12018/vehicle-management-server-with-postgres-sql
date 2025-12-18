@@ -27,7 +27,7 @@ User can book or rent car at resaonable price. User can cancell their booking .
 Install my-project with npm
 
 ```bash
-  npm install my-project
+  npm install https://github.com/asif12018/vehicle-management-server-with-postgres-sql.git
   cd my-project
 ```
     
