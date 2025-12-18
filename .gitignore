@@ -2,3 +2,5 @@
 node_modules
 tsconfig.json
 .vercel
+
+dist
