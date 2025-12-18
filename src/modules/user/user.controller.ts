@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { userService } from "./user.service";
+import { getUserEmailAndRole } from "../../config/helperFunction";
 
 //get all user
 
@@ -43,6 +44,18 @@ const getSingleUser = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
   try {
+    //get user data from headers
+    const userData = await getUserEmailAndRole(
+          req.headers.authorization as string
+        );
+
+      //filtering user update data role
+      if(userData.user.rows[0].role === 'customer' && req.body.role){
+          return res.status(400).json({
+            success: false,
+            message:'User cant update it own role'
+          })
+      }
     const result = await userService.updateUser(
       req.body,
       req.params.userId as string
