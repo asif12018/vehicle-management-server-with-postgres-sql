@@ -11,6 +11,8 @@ const registerUser = async (payload: Record<string, unknown>) =>{
     const result = await pool.query(`
         INSERT INTO users(name, email, password, phone, role) VALUES($1, $2, $3, $4, $5) RETURNING *
         `,[name, email, hashedPassword, phone, role]);
+
+        
     return result;
 }
 
@@ -22,15 +24,23 @@ const loginUser = async(email: string, password: string)=>{
     if(result.rows.length === 0){
         return null;
     }
-    const user = result.rows[0];
-    const match = await bcrypt.compare(password, user.password);
+    
+    const userData = result.rows[0];
+    const user = {
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        phone: userData.phone,
+        role: userData.role
+    }
+    const match = await bcrypt.compare(password, userData.password);
 
     if(!match){
         return null;
     }
 
     //generating token after successfully signing
-    const token = jwt.sign({name:user.name, email: user.email, phone:user.phone, role: user.role}, config.jwtSecret as string, {expiresIn: "1d"});
+    const token = jwt.sign({name:userData.name, email: userData.email, phone:userData.phone, role: userData.role}, config.jwtSecret as string, {expiresIn: "1d"});
 
     return {token, user};
 }

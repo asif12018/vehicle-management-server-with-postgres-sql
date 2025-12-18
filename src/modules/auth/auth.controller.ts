@@ -6,10 +6,14 @@ import { authServices } from "./auth.service";
 const registerUser = async(req: Request, res: Response) =>{
     try{
        const result = await authServices.registerUser(req.body);
+       const {id, name, email, phone, role} = result.rows[0];
+       const user = {
+        id, name, email, phone, role
+       }
        return res.status(201).json({
          success: true,
         message: "User registered successfully",
-        data: result.rows[0]
+        data: user
        })
     }catch(err: any){
         res.status(500).json({
