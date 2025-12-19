@@ -9,7 +9,7 @@ const getAllUsers = async (req: Request, res: Response) => {
     const result = await userService.getAllUsers();
     res.status(200).json({
       success: true,
-      message: "Users retrieve successfully",
+      message: "Users retrieved successfully",
       data: result.rows,
     });
   } catch (err) {}
@@ -28,7 +28,7 @@ const getSingleUser = async (req: Request, res: Response) => {
     }
     res.status(200).json({
       success: true,
-      message: "User retrieve successfully",
+      message: "User retrieved successfully",
       data: result.rows,
     });
   } catch (err: any) {
@@ -55,6 +55,15 @@ const updateUser = async (req: Request, res: Response) => {
             success:false,
             message:'forbidden access'
           })
+        }
+
+        // check if the updator and user is same or not
+
+        if(userData.user.rows[0].role === 'customer' && userData.user.rows[0].id != req.params.userId){
+            return res.status(403).json({
+              success:false,
+              message:"You don't have permission to perform this action"
+            })
         }
 
       //filtering user update data role

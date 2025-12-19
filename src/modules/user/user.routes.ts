@@ -10,9 +10,9 @@ const router = express.Router();
 
 
 
-router.get("/users", protectedRoute('admin','customer'),userController.getAllUsers);
+router.get("/users", protectedRoute('admin'),userController.getAllUsers);
 
-router.get("/users/:userId", protectedRoute('admin', 'customer'),userController.getSingleUser);
+router.get("/users/:userId", protectedRoute('admin'),userController.getSingleUser);
 
 router.put("/users/:userId", protectedRoute('admin','customer'),userController.updateUser);
 
