@@ -94,3 +94,17 @@ export const isVehicleExist = async (id:string) =>{
 
     return true
 }
+
+//is active booking exist
+
+export const isActiveBookingExist = async(id:string)=>{
+  const result = await pool.query(`
+    SELECT * FROM bookings WHERE customer_id=$1
+    `,[id]);
+
+    if(result.rows.length === 0){
+      return false
+    }
+
+    return true
+}

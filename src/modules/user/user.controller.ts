@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { userService } from "./user.service";
-import { getUserEmailAndRole } from "../../config/helperFunction";
+import { getUserEmailAndRole, isActiveBookingExist } from "../../config/helperFunction";
 
 //get all user
 
@@ -110,6 +110,14 @@ const updateUser = async (req: Request, res: Response) => {
 
 const deleteUser = async (req: Request, res: Response) => {
   try {
+    //is active booking exist?
+    const activeBooking = await isActiveBookingExist(req.params.userId as string);
+    if(activeBooking === true){
+      return res.status(400).json({
+        success:false,
+        message:'Cant delete the user. User have an active booking!!!'
+      })
+    }
     const result = await userService.deleteUser(req.params.userId as string);
     if(result.rowCount === 0){
       res.status(404).json({

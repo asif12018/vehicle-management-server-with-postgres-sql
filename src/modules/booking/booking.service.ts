@@ -125,8 +125,8 @@ const updateBooking = async(payLoad:Record<string, unknown>, bookingId: string, 
           id,
           customer_id,
           vehicle_id,
-          TO_CHAR(rent_start_date, 'YYY-MM-DD') AS rent_start_date,
-          TO_CHAR(rent_end_date, 'YYY-MM-DD') AS rent_end_date,
+          TO_CHAR(rent_start_date, 'YYYY-MM-DD') AS rent_start_date,
+          TO_CHAR(rent_end_date, 'YYYY-MM-DD') AS rent_end_date,
           total_price::FLOAT,
           status
           `,[status, bookingId]);
@@ -138,14 +138,26 @@ const updateBooking = async(payLoad:Record<string, unknown>, bookingId: string, 
     //for admin
     if(payLoad.role === 'admin'){
       const updateBookingResult = await pool.query(`
-         UPDATE bookings SET status=$1 WHERE id=$2 RETURNING 
-         id,
-          customer_id,
-          vehicle_id,
-          TO_CHAR(rent_start_date, 'YYY-MM-DD') AS rent_start_date,
-          TO_CHAR(rent_end_date, 'YYY-MM-DD') AS rent_end_date,
-          total_price::FLOAT,
-          status
+          UPDATE bookings b
+    SET status = $1
+    FROM vehicles v
+    WHERE b.id = $2
+      AND v.id = b.vehicle_id
+    RETURNING
+      b.id,
+      b.customer_id,
+      b.vehicle_id,
+      TO_CHAR(b.rent_start_date, 'YYYY-MM-DD') AS rent_start_date,
+      TO_CHAR(b.rent_end_date, 'YYYY-MM-DD') AS rent_end_date,
+      b.total_price::FLOAT,
+      b.status,
+      json_build_object(
+        'availability_status',
+        CASE 
+          WHEN $1 = 'returned' THEN 'available'
+          ELSE v.availability_status
+        END
+      ) AS vehicle
         `,[status, bookingId]);
 
         if (updateBookingResult.rows.length === 0){
@@ -156,12 +168,20 @@ const updateBooking = async(payLoad:Record<string, unknown>, bookingId: string, 
           await pool.query(`
             UPDATE vehicles
             SET availability_status='available'
-            WHERE id=$1
+            WHERE id=$1 
+            RETURNING availability_status
             `,[updateBookingResult.rows[0].vehicle_id]);
         }
 
         return updateBookingResult;
     }
+
+
+
+ 
+
+
+    
 }
 
 //delete a vehicles

@@ -43,7 +43,7 @@ const createBooking = async (req: Request, res: Response) => {
     }
     return res.status(201).json({
       success: true,
-      message: "booking created successfully",
+      message: "Booking created successfully",
       data: result.rows[0],
     });
   } catch (err: any) {
@@ -77,7 +77,7 @@ const getAllBookings = async (req: Request, res: Response) => {
     }
     return res.status(200).json({
       success: true,
-      message: "Bookings retrieved successfully",
+      message: userData?.user.rows[0].role === 'customer' ? 'Your bookings retrieved successfully' : 'Bookings retrieved successfully',
       data: result.rows,
     });
   } catch (err: any) {
