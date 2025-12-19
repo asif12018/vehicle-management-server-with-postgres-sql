@@ -35,7 +35,7 @@ Install my-project with npm
 
 github link:
 
-api link:
+api link: https://assignment-2-pearl-two.vercel.app/
 
 
 
