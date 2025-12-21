@@ -19,14 +19,6 @@ const protectedRoute = (...roles: string[]) => {
 
       const token = authHeader.split(" ")[1];
 
-      const bearer = authHeader.split(" ")[0];
-
-      if(bearer !== 'Bearer'){
-        return res.status(401).json({
-           success: false,
-           message:"missing Bearer or you have mis spell bearer word"
-        })
-      }
 
       if(!token){
         return res.status(401).json({
