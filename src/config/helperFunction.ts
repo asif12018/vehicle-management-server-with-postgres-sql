@@ -37,7 +37,15 @@ export const checkIfBookingExists = async(id:string)=>{
 
 //get user id and role
 
-export const getUserEmailAndRole = async(token: string)=>{
+export const getUserEmailAndRole = async(authHeader: string)=>{
+  if(!authHeader){
+    return null
+  }
+  const token = authHeader.split(" ")[1];
+  const bearer = authHeader.split(" ")[0];
+  
+
+
   if(!token){
     return null
   }

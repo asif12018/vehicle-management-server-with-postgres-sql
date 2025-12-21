@@ -119,7 +119,7 @@ const updateBooking = async (req: Request, res: Response) => {
     ) {
       return res.status(400).json({
         success: false,
-        message: "Invalid input. Customer status data must be cancelled",
+        message: "Invalid input. Customer can only cancelled",
       });
     }
 
@@ -129,7 +129,7 @@ const updateBooking = async (req: Request, res: Response) => {
     ) {
       return res.status(400).json({
         success: false,
-        message: "Invalid input. Admin status data must be returned",
+        message: "Invalid input. Admin cam only returned",
       });
     }
 

@@ -7,12 +7,32 @@ import { JwtPayload } from "jsonwebtoken";
 const protectedRoute = (...roles: string[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const token = req.headers.authorization;
-      if (!token) {
+      const authHeader = req.headers.authorization;
+      if (!authHeader) {
         return res.status(401).json({
           success: false,
-          message: "forbidden access",
+          message: "Authorization Header is missing",
         });
+      }
+
+      // extracting token from bearer
+
+      const token = authHeader.split(" ")[1];
+
+      const bearer = authHeader.split(" ")[0];
+
+      if(bearer !== 'Bearer'){
+        return res.status(401).json({
+           success: false,
+           message:"missing Bearer or you have mis spell bearer word"
+        })
+      }
+
+      if(!token){
+        return res.status(401).json({
+          success: false,
+          message: "Unauthorized"
+        })
       }
 
       const decoded = jwt.verify(
