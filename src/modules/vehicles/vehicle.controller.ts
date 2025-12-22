@@ -76,7 +76,7 @@ const getSingleVehicles = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Vehicle retrieved successfully",
-      data: result.rows,
+      data: result.rows[0],
     });
   } catch (err: any) {
     res.status(500).json({
